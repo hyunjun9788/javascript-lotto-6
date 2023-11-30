@@ -1,5 +1,4 @@
-import { Console } from "@woowacourse/mission-utils";
-import { INPUT_ERROR_MESSAGE } from "./constant/lotto.js";
+import { ERROR } from "./constant/lotto.js";
 class Lotto {
   #numbers;
 
@@ -9,27 +8,25 @@ class Lotto {
   }
 
   #validate(numbers) {
+    const PATTERN = /^(\d+,\d+,\d+,\d+,\d+,\d+)$/;
     if (numbers.length !== 6) {
-      throw new Error(INPUT_ERROR_MESSAGE.INVALID_LOTTO_LENGTH_ERROR);
-    }
-    if (
-      numbers.some(
-        (number) =>
-          isNaN(Number(number)) || number < 1 || number > 45 || number % 1 !== 0
-      )
-    ) {
-      throw new Error(INPUT_ERROR_MESSAGE.INVALID_INPUT_NUMBER_ERROR);
+      throw new Error(ERROR.length);
     }
     if (numbers.length !== new Set(numbers).size) {
-      throw new Error(INPUT_ERROR_MESSAGE.DUPLICATE_INPUT_NUMBER_ERROR);
+      throw new Error(ERROR.duplication);
     }
+    numbers.forEach((number) => {
+      if (number < 1 || number > 45) {
+        throw new Error(ERROR.outOfRange);
+      }
+      if (!PATTERN.test(numbers)) {
+        throw new Error(ERROR.invalidNum);
+      }
+    });
   }
 
-  getNumbers() {
+  get getWinnerNumber() {
     return this.#numbers;
-  }
-  print() {
-    Console.print(`[${this.#numbers.join(", ")}]`);
   }
 
   // TODO: 추가 기능 구현
